@@ -43,5 +43,50 @@ def calculate_projection_matrix_using_test_data(test_data = None):
 
     return projection_matrix
 
+def least_squares_solver(array_A, array_B):
+    """
+    This function solves the equation Ax = B using least squares method.
 
-calculate_projection_matrix_using_test_data(test_data = [[1,2,3,4,5],[6,7,8,9,10], [11,12,13,14,15], [16,17,18,19,20], [21,22,23,24,25], [26,27,28,29,30]])
+    INPUT: 
+    array_A - 2D np array of size m x n
+    array_B - 2D np array of size m x 1
+
+    OUTPUT: 
+    array_X - 1D list of size n x 1
+
+    """
+
+    array_X, _, _, _ = np.linalg.lstsq(array_A, array_B, rcond=None)  # "rcond = None" means numbers smaller than machine precision are considered zero
+    array_X = array_X.flatten() # Convert to a 1D list
+    array_X = array_X.tolist()  # Convert to a 1D list
+    return array_X
+
+if __name__ == "__main__":
+    # The cost of the apple and carrot  example given in the presentation to be solved using least squares method
+    
+    # 1)Ayse says that she has bought two apples and three carrot for 3.49₺.
+    #  *It is known that at that time apple and carrot cost 0.47₺ and 0.85₺ per item respectively.
+    # 2)Ahmet says that she has bought seven apples and five carrot for 7.60₺.
+    #  *It is known that at that time apple and carrot cost 0.55₺ and 0.75₺ per item respectively.
+    # 3)Ezgi says that she has bought two apples and four carrot for 4.20₺.
+    #  *It is known that at that time apple and carrot cost 0.50₺ and 0.80₺ per item respectively.
+
+    # Find the cost of an apple and a carrot.
+    array_A = np.zeros((3, 2))
+    array_B = np.zeros((3, 1))
+
+    array_A[0] = [2, 3]
+    array_A[1] = [7, 5]
+    array_A[2] = [2, 4]
+
+    array_B[0] = [3.49]
+    array_B[1] = [7.60]
+    array_B[2] = [4.20]
+
+    apple_cost, carrot_cost = least_squares_solver(array_A, array_B)
+    print('Apple cost: {:.2f} TL'.format(apple_cost))
+    print('Carrot cost: {:.2f} TL'.format(carrot_cost))
+
+    # when run, the output is:
+    #Apple cost: 0.51 TL
+    #Carrot cost: 0.80 TL
